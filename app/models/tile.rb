@@ -5,7 +5,7 @@ class Tile < ApplicationRecord
 
   def exists?
     if Tile.by_game(play.game_id).where('x = ? AND y = ?', x, y).any?
-      errors.add(:base, :tile_exists)
+      errors.add(:base, 'Tile with this coordinates already exists')
     end
   end
 
