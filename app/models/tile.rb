@@ -1,12 +1,16 @@
 class Tile < ApplicationRecord
   belongs_to :play
+  scope :by_game, -> (game_id) { joins(:play).where('plays.game_id = ?', game_id) }
+  validate :exists?
 
   def exists?
-    raise 'Not Implemented'
+    if Tile.by_game(play.game_id).where('x = ? AND y = ?', x, y).any?
+      errors.add(:base, :tile_exists)
+    end
   end
 
   def adjacent
-    raise 'Not Implemented'
+    Tile.by_game(play.game_id).where('abs(x - ?) + abs(y - ?)', x, y)
   end
 
   def center?
